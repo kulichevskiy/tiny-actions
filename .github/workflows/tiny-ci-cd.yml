@@ -1,0 +1,36 @@
+name: CI/CD Pipeline
+
+on:
+    push:
+      branches:
+        - main
+    pull_request:
+      branches:
+        - main
+    workflow_dispatch:
+  
+env:
+    DOCKER_USERNAME: achevsky
+    GIT_USERNAME: kulichevskiy
+    IMAGE_NAME: airflow
+    EMAIL: alexey.kulichevskiy@gmail.com
+    NAME: Alexey Kulichevskiy
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/main'
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4       
+            - name: Deploy and update code on the server
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ secrets.EC2_HOST }}
+                username: ubuntu
+                port: 22
+                key: ${{ secrets.SSH_PRIVATE_KEY }}
+                script: |
+                    # Ensure SSH session to the server is set up correctly
+                    eval $(ssh-agent -s)
+                    ssh-keyscan github.com >> ~/.ssh/known_hosts
+                
