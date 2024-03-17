@@ -41,4 +41,4 @@ jobs:
                 key: ${{ secrets.SSH_PRIVATE_KEY }}
                 port: 22 # or your custom port
                 source: "." # or specify directories/files to copy
-                target: "/app"
+                target: "app/"
